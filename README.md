@@ -20,9 +20,9 @@ the following is an overview of agile software development, arguably the best mo
 
 ---
 
-# overview
+## an introduction to agile
 
-*this writeup is intended to help DBC teachers and students talk about agile.  this is by no means complete.  feel free to edit as needed.*
+*this writeup is intended to help DBC teachers and students talk about agile.*
 
 ### topics
 
@@ -37,7 +37,7 @@ the following is an overview of agile software development, arguably the best mo
 - information radiators
 
 
-# defining agile
+## defining agile
 
 "agile" is an overused word that's often confusing for people who haven't been exposed to more than one perspective on the matter.
 
@@ -117,7 +117,7 @@ the fact is, while the agile community agrees on the above, they have a hard tim
 
 and here are two links from DBC teachers [Jeffrey Wescott](https://gist.github.com/jeffreywescott/5223873) and [Abi Noda](https://gist.github.com/abinoda/5867924) with more as well.
 
-# working agreements
+## working agreements
 
 once you've decided to work with other human beings, things tend to get a little complicated.
 
@@ -139,7 +139,7 @@ consider, for example, that a project has just started on Friday and your team i
 the initial overhead of generating a working agreement pays dividends down the road.  all teams should have some sort of working agreement to fall back on during times of uncertainty or conflict.  these guidelines help everyone stay on the same page.
 
 
-# user stories
+## user stories
 
 user stories are small, clear, independent chunks of value that a team uses to structure and organize its work.
 
@@ -152,7 +152,7 @@ read more about user stories, their purpose, a few examples and more at [mountai
 - [organized as a set of releases](http://blog.piecemealgrowth.net/images/storymapping_illustratie_2.jpg)
 
 
-# story points and agile estimation
+## story points and agile estimation
 
 it's important that stories are small so the team can implement a single story within a reasonable (hours..days) amount of time.  this way the team can create a sense of **velocity**, or speed, with which they move through the project.
 
@@ -222,7 +222,7 @@ the devil is in the details on this one so if you're interested in more about st
 [agile estimation](http://www.agilebuddha.com/agile/agile-estimation-8-steps-to-successful-story-point-estimation/)
 
 
-# information radiators
+## information radiators
 
 so now, as a team with a reasonably good understanding of agile, a solid working agreement, some user stories and, if we chose that adventure, some story points and estimation of our effort, what can we do to help ourselves stay on track?
 
