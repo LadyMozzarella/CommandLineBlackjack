@@ -1,3 +1,4 @@
+#######MODEL######
 class StandardDeckConstructor
   CARDS = {
     :ace    => 11,
@@ -90,6 +91,70 @@ class Hand
     end
   end
 end
+
+######VIEW######
+class HandView
+  #calls
+
+
+end
+
+
+class CardView
+
+
+
+end
+
+
+#handview for player
+# --> calls cardview for all of the cards in the hand??
+# also need to display the score.
+
+
+
+
+######CONTROLLER#######
+class Controller
+  def run
+    # Welcome to blackjack.
+    # Create the deck
+    # Shuffle the deck
+    # Cut the deck
+    # Create hand for player
+    # Create hand for dealer
+    # Give one card to Player
+##  # Display message saying which card
+    # Give one card to Dealer
+    # Give another card to Player
+##  # Display message saying which card
+    # Give another card to Dealer
+##  # Display message saying score of one of the cards
+##  # Tell the Player his/her score. (maybe?)
+    # Ask if they want to hit or stay
+    # UNTIL STAY OR BUST:
+    # (said hit) HIT:
+      # Give another card to Player
+##    # Display message for which card it was
+      # Run busted?
+    # WHEN THEY STAY
+      # Reveal the Dealer cards.
+      # Until Dealer score is 17 or more,
+      #   keep giving the Dealer more cards
+      # Run busted? each time.
+      #
+
+## Need message for bust.
+## Need a message for blackjack.
+    #calls Handview
+  end
+end
+
+
+
+
+
+
 
 
 
