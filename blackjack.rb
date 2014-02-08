@@ -41,7 +41,7 @@ class Deck
   end
 
   def cut
-    @cards = unshift(@cards.pop(rand(@cards.length)))
+    @cards.unshift(@cards.pop(rand(@cards.length))).flatten!
   end
 end
 
@@ -116,41 +116,105 @@ end
 
 ######CONTROLLER#######
 class Controller
-  def run
+  def run_hand
     # Welcome to blackjack.
+    puts welcome
+
     # Create the deck
     # Shuffle the deck
     # Cut the deck
+    @deck = prepare_deck
+
     # Create hand for player
     # Create hand for dealer
-    # Give one card to Player
-##  # Display message saying which card
-    # Give one card to Dealer
-    # Give another card to Player
-##  # Display message saying which card
-    # Give another card to Dealer
-##  # Display message saying score of one of the cards
-##  # Tell the Player his/her score. (maybe?)
-    # Ask if they want to hit or stay
-    # UNTIL STAY OR BUST:
-    # (said hit) HIT:
-      # Give another card to Player
-##    # Display message for which card it was
-      # Run busted?
-    # WHEN THEY STAY
-      # Reveal the Dealer cards.
-      # Until Dealer score is 17 or more,
-      #   keep giving the Dealer more cards
-      # Run busted? each time.
-      #
+    @player_hand = Hand.new
+    @dealer_hand = Hand.new
+    @hand_view = HandView.new
+    @dealer_hand_view = HandView.new
 
-## Need message for bust.
-## Need a message for blackjack.
-    #calls Handview
+    # Give two cards to Player and to Dealer
+    deal_starting_hands
+
+# ---------------------------
+    ##CALL TO HANDVIEW
+##  # Display dealer cards
+    ##CALL TO HANDVIEW
+    # Display Player cards
+##  # Tell the Player his/her score. (maybe?)
+# ---------------------------
+    # Ask if they want to hit or stay
+
+    while (hit_me?) && (!@player_hand.bust?)
+      #Added a wehatever card message
+      add_card_to_hand(@player_hand)
+    end
+
+    if @player_hand.bust?
+      puts "You lose!"
+      return
+    end
+    while @dealer_hand.check_score < 17
+      @dealer_hand.add_card(@deck.pop)
+    end
+    if @dealer_hand.bust?
+      puts "Dealer loses!"
+      return
+    else
+      @dealer_hand.check_score >= @player_hand.check_score ? "Dealer wins!" : "Player wins!"
+      return
+    end
+  end
+
+  def get_input(msg_to_ask_for_input, display_hands = false)
+    system "clear" unless system "cls"
+    puts @handview.player_hand if display_hands
+    puts @handview.dealer_hand if display_hands
+    puts msg_to_ask_for_input
+    gets.chomp
+  end
+
+  def welcome
+    "Welcome! Let's play some Blackjack!"
+  end
+
+  def prepare_deck
+    @deck = Deck.new
+    @deck.add_standard_deck
+    @deck.shuffle
+    @deck.cut
+  end
+
+  def deal_starting_hands
+    @player_hand.add_card(@deck.pop)
+    @dealer_hand.add_card(@deck.pop)
+    @player_hand.add_card(@deck.pop)
+    @dealer_hand.add_card(@deck.pop)
+  end
+
+  def add_card_to_hand(hand)
+    hand.add_card(@deck.pop)
+  end
+
+  def ask_to_hit
+    "Hit or stay?"
+  end
+
+  def hit_me?
+    puts ask_to_hit
+    case gets.chomp
+    when 'hit', 'h'
+      true
+    when 'stay','s'
+      false
+    else
+      puts "I don't understand. Hit or stay?"
+      hit_me?(gets.chomp)
+    end
   end
 end
 
-
+blackjack = Controller.new
+blackjack.run
 
 
 
