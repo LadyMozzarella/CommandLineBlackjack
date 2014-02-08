@@ -95,17 +95,67 @@ end
 ######VIEW######
 class HandView
   #calls
+  def initialize(cards)
+    @cards = cards
+  end
 
+  def dealer_hand
+    final_display = "     DEALER HAND \n"
+    line1 = ""
+    line2 = ""
+    line3 = ""
+    line4 = ""
+    line5 = ""
 
+    @cards.length.times do |card|
+      current_card = CardView.new(@cards[card])
+      card == 0 ? breaking_up_display = current_card.hidden_card.split("\n") : breaking_up_display = current_card.show_card.split("\n")
+      line1 << "#{breaking_up_display[0]}   "
+      line2 << breaking_up_display[1] << "   "
+      line3 << breaking_up_display[2] << "   "
+      line4 << breaking_up_display[3] << "   "
+      line5 << breaking_up_display[4] << "   "
+    end
+    final_display << "#{line1}\n#{line2}\n#{line3}\n#{line4}\n#{line5}"
+    final_display
+  end
+
+  def player_hand
+    final_display = "     PLAYER HAND \n"
+    line1 = ""
+    line2 = ""
+    line3 = ""
+    line4 = ""
+    line5 = ""
+
+    @cards.length.times do |card|
+      current_card = CardView.new(@cards[card])
+      breaking_up_display = current_card.show_card.split("\n")
+      line1 << "#{breaking_up_display[0]}   "
+      line2 << breaking_up_display[1] << "   "
+      line3 << breaking_up_display[2] << "   "
+      line4 << breaking_up_display[3] << "   "
+      line5 << breaking_up_display[4] << "   "
+    end
+    final_display << "#{line1}\n#{line2}\n#{line3}\n#{line4}\n#{line5}"
+    final_display
+  end
 end
 
 
 class CardView
+  def initialize(card)
+    @card = card
+  end
 
+  def hidden_card
+    "+-----+\n|*****|\n|*****|\n|*****|\n+-----+"
+  end
 
-
+  def show_card
+    "+-----+\n|     |\n|#{@card.get_name.to_s.upcase.ljust(5)}|\n|     |\n+-----+"
+  end
 end
-
 
 #handview for player
 # --> calls cardview for all of the cards in the hand??
