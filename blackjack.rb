@@ -61,6 +61,7 @@ class Card
 end
 
 class Hand
+  attr_reader :cards
   def initialize
     @cards = []
     @score = 0
@@ -94,51 +95,45 @@ end
 
 ######VIEW######
 class HandView
-  #calls
-  def initialize(cards)
-    @cards = cards
-  end
 
-  def dealer_hand
-    final_display = "     DEALER HAND \n"
+  def self.dealer_hand(hand)
+
     line1 = ""
     line2 = ""
     line3 = ""
     line4 = ""
     line5 = ""
 
-    @cards.length.times do |card|
-      current_card = CardView.new(@cards[card])
+    hand.length.times do |card|
+      current_card = CardView.new(hand[card])
       card == 0 ? breaking_up_display = current_card.hidden_card.split("\n") : breaking_up_display = current_card.show_card.split("\n")
-      line1 << "#{breaking_up_display[0]}   "
-      line2 << breaking_up_display[1] << "   "
-      line3 << breaking_up_display[2] << "   "
-      line4 << breaking_up_display[3] << "   "
-      line5 << breaking_up_display[4] << "   "
+      line1 << "   " << "#{breaking_up_display[0]}"
+      line2 << "   " << breaking_up_display[1]
+      line3 << "   " << breaking_up_display[2]
+      line4 << "   " << breaking_up_display[3]
+      line5 << "   " << breaking_up_display[4]
     end
-    final_display << "#{line1}\n#{line2}\n#{line3}\n#{line4}\n#{line5}"
-    final_display
+    "#{line1}\n#{line2}\n#{line3}\n#{line4}\n#{line5}"
   end
 
-  def player_hand
-    final_display = "     PLAYER HAND \n"
+  def self.player_hand(hand)
+
     line1 = ""
     line2 = ""
     line3 = ""
     line4 = ""
     line5 = ""
 
-    @cards.length.times do |card|
-      current_card = CardView.new(@cards[card])
+    hand.length.times do |card|
+      current_card = CardView.new(hand[card])
       breaking_up_display = current_card.show_card.split("\n")
-      line1 << "#{breaking_up_display[0]}   "
-      line2 << breaking_up_display[1] << "   "
-      line3 << breaking_up_display[2] << "   "
-      line4 << breaking_up_display[3] << "   "
-      line5 << breaking_up_display[4] << "   "
+      line1 << "   " << "#{breaking_up_display[0]}"
+      line2 << "   " << breaking_up_display[1]
+      line3 << "   " << breaking_up_display[2]
+      line4 << "   " << breaking_up_display[3]
+      line5 << "   " << breaking_up_display[4]
     end
-    final_display << "#{line1}\n#{line2}\n#{line3}\n#{line4}\n#{line5}"
-    final_display
+    "#{line1}\n#{line2}\n#{line3}\n#{line4}\n#{line5}"
   end
 end
 
@@ -157,68 +152,61 @@ class CardView
   end
 end
 
-#handview for player
-# --> calls cardview for all of the cards in the hand??
-# also need to display the score.
-
-
-
-
 ######CONTROLLER#######
 class Controller
-  def run_hand
-    # Welcome to blackjack.
+
+  def run
     puts welcome
+    response = true
+    while response
+      run_hand
+      response = get_input("Do you want to play again y/n" , true, true ) == "y"
+    end
+  end
 
-    # Create the deck
-    # Shuffle the deck
-    # Cut the deck
+  def run_hand
+    system "clear" unless system "cls"
     @deck = prepare_deck
-
-    # Create hand for player
-    # Create hand for dealer
     @player_hand = Hand.new
     @dealer_hand = Hand.new
-    @hand_view = HandView.new
-    @dealer_hand_view = HandView.new
 
-    # Give two cards to Player and to Dealer
     deal_starting_hands
+    puts HandView.dealer_hand(@dealer_hand.cards)
+    puts HandView.player_hand(@player_hand.cards)
 
-# ---------------------------
-    ##CALL TO HANDVIEW
-##  # Display dealer cards
-    ##CALL TO HANDVIEW
-    # Display Player cards
-##  # Tell the Player his/her score. (maybe?)
-# ---------------------------
-    # Ask if they want to hit or stay
 
-    while (hit_me?) && (!@player_hand.bust?)
+    while get_input("hit or stay", true) == "hit" && (!@player_hand.bust?)
       #Added a wehatever card message
       add_card_to_hand(@player_hand)
+      if @player_hand.bust?
+        get_input( "You lose! Press enter.", true, true)
+        return
+      end
     end
 
-    if @player_hand.bust?
-      puts "You lose!"
-      return
-    end
+
+
     while @dealer_hand.check_score < 17
       @dealer_hand.add_card(@deck.pop)
     end
     if @dealer_hand.bust?
-      puts "Dealer loses!"
+      get_input( "Dealer loses! Press enter.", true, true)
       return
     else
-      @dealer_hand.check_score >= @player_hand.check_score ? "Dealer wins!" : "Player wins!"
-      return
+      if @dealer_hand.check_score >= @player_hand.check_score
+        get_input( "Dealer wins! Press enter.", true, true)
+      else
+        get_input( "Player wins! Press enter.", true, true)
+      end
     end
   end
 
-  def get_input(msg_to_ask_for_input, display_hands = false)
+  def get_input(msg_to_ask_for_input, display_hands = false, show_dealer = false)
     system "clear" unless system "cls"
-    puts @handview.player_hand if display_hands
-    puts @handview.dealer_hand if display_hands
+
+    puts "\n\n   DEALER HAND \n#{HandView.dealer_hand(@dealer_hand.cards)}" if display_hands && !show_dealer
+    puts "\n\n   DEALER HAND \n#{HandView.player_hand(@dealer_hand.cards)}" if display_hands && show_dealer
+    puts "\n\n   PLAYER HAND \n#{HandView.player_hand(@player_hand.cards)}\n\n" if display_hands
     puts msg_to_ask_for_input
     gets.chomp
   end
