@@ -1,3 +1,25 @@
+require 'colorize'
+
+require 'pg'
+class HighScores
+  def self.add(name, gameswon, gamesplayed, winpercent)
+    pg_connection = PG.connect( dbname: 'blackjack' )
+    pg_connection.exec("
+      insert into highscores
+      values ('#{name}', '#{gameswon.to_s}', '#{gamesplayed.to_s}', '#{winpercent.to_s}');
+    ")
+  end
+
+  def self.print
+    pg_connection = PG.connect( dbname: 'blackjack' )
+    pg_connection.exec("
+      SELECT name, gameswon, gamesplayed, winpercent FROM highscores
+      ORDER BY winpercent desc, gamesplayed
+    ")
+  end
+end
+
+
 #######MODEL######
 class StandardDeckConstructor
   CARDS = {
@@ -154,13 +176,44 @@ end
 
 ######CONTROLLER#######
 class Controller
-
   def run
     puts welcome
     response = true
+    wins = 0
+    losses = 0
     while response
-      run_hand
+      victorious = run_hand
+      wins += 1 if victorious
+      losses += 1 unless victorious
       response = get_input("Do you want to play again y/n" , true, true ) == "y"
+    end
+    if wins + losses > 2
+      puts "you won #{wins} out of #{wins + losses} games"
+      puts "do you want to enter your name in the high_scores? y/n"
+      if gets.chomp == "y"
+        win_percent = ( 100 * wins ) / ( wins + losses )
+        puts "What's your name?"
+        name = gets.chomp
+        system "clear" unless system "cls"
+        HighScores.add(name, wins, (wins+losses), win_percent)
+        scores = HighScores.print
+        high_scores_table = "     | Name       | Games Won  | \# of Games | Win \%      |\n"
+        high_scores_table << "     +===================================================+\n"
+        scores.each do |score|
+          high_scores_table << "     |"
+          score.each do |column|
+            high_scores_table << " #{column[1].ljust(10)} |"
+          end
+          high_scores_table << "\n"
+        end
+        puts high_scores_table.yellow
+        # HighScoresView.print_scores(HighScores.scores)
+      else
+        puts "You could have been great you know..."
+      end
+    else
+      puts "you did not play enough to be in the high scores"
+      puts "here be the high scores matey!"
     end
   end
 
@@ -176,27 +229,26 @@ class Controller
 
 
     while get_input("hit or stay", true) == "hit" && (!@player_hand.bust?)
-      #Added a wehatever card message
       add_card_to_hand(@player_hand)
       if @player_hand.bust?
         get_input( "You lose! Press enter.", true, true)
-        return
+        return false
       end
     end
-
-
 
     while @dealer_hand.check_score < 17
       @dealer_hand.add_card(@deck.pop)
     end
     if @dealer_hand.bust?
       get_input( "Dealer loses! Press enter.", true, true)
-      return
+      return true
     else
       if @dealer_hand.check_score >= @player_hand.check_score
         get_input( "Dealer wins! Press enter.", true, true)
+        return false
       else
         get_input( "Player wins! Press enter.", true, true)
+        return true
       end
     end
   end
@@ -204,10 +256,10 @@ class Controller
   def get_input(msg_to_ask_for_input, display_hands = false, show_dealer = false)
     system "clear" unless system "cls"
 
-    puts "\n\n   DEALER HAND \n#{HandView.dealer_hand(@dealer_hand.cards)}" if display_hands && !show_dealer
-    puts "\n\n   DEALER HAND \n#{HandView.player_hand(@dealer_hand.cards)}" if display_hands && show_dealer
-    puts "\n\n   PLAYER HAND \n#{HandView.player_hand(@player_hand.cards)}\n\n" if display_hands
-    puts msg_to_ask_for_input
+    puts "\n\n   DEALER HAND \n#{HandView.dealer_hand(@dealer_hand.cards)}".cyan if display_hands && !show_dealer
+    puts "\n\n   DEALER HAND \n#{HandView.player_hand(@dealer_hand.cards)}".cyan if display_hands && show_dealer
+    puts "\n\n   PLAYER HAND \n#{HandView.player_hand(@player_hand.cards)}\n\n".green if display_hands
+    puts msg_to_ask_for_input.red
     gets.chomp
   end
 
@@ -254,34 +306,6 @@ end
 blackjack = Controller.new
 blackjack.run
 
+###ADD TO DATABASE:
 
-
-
-
-
-
-#next steps:
-# Hand view
-#   format the data of the hand into the string
-#   controller will be able to print them.
-# Controller
-# Card View
-# Dealer
-# Player (may not need at all--might just be input)
-
-# card1 = Card.new(:ace,11)
-# card2 = Card.new(:nine, 9)
-# hand = Hand.new
-# hand.add_card(card1)
-# p hand.check_score
-# hand.add_card(card2)
-# p hand.check_score
-# p hand.bust?
-# hand.add_card(Card.new(:five, 5))
-# p hand.bust?
-# p hand.check_score
-# hand.add_card(Card.new(:ten, 10))
-# p hand.bust?
-
-# deck = Deck.new
-# p deck.add_standard_deck
+###LIST DATABASE:
