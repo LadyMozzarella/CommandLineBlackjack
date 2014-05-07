@@ -42,14 +42,17 @@ When prompted, type the appropriate command asked for and then select enter.
 Here are some shots of the game:
 
 The beginning of the game (here you would either type hit or stay based on what you would like to do):
+
 ![initial game start](https://github.com/LadyMozzarella/CommandLineBlackjack/blob/master/images/ss1.png?raw=true)
 
 ![midgame](https://github.com/LadyMozzarella/CommandLineBlackjack/blob/master/images/ss4.png?raw=true)
 
 We won a round here!
+
 ![end game](https://github.com/LadyMozzarella/CommandLineBlackjack/blob/master/images/ss5.png?raw=true)
 
 The high scores table:
+
 ![high scores table](https://github.com/LadyMozzarella/CommandLineBlackjack/blob/master/images/ss2.png?raw=true)
 
 ##Features
