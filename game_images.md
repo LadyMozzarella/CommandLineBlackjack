@@ -1,1 +1,0 @@
-[images/ss1](images/ss1)
