@@ -1,8 +1,5 @@
 require 'pg'
 
-require 'faker'
-
-
 # ---------------------------------------
 # IMPORTANT!  don't skip this step
 # ---------------------------------------
